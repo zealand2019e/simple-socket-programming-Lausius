@@ -17,7 +17,7 @@ namespace EchoClient
     {
         public static void Start()
         {
-            TcpClient clientSocket = new TcpClient("localhost", 7);
+            TcpClient clientSocket = new TcpClient("192.168.24.174", 7);
             using (clientSocket)
             {
                 Console.WriteLine("server found");
@@ -25,10 +25,13 @@ namespace EchoClient
                 StreamReader sr = new StreamReader(ns);
                 StreamWriter sw = new StreamWriter(ns);
                 sw.AutoFlush = true;
-
-                string message = Console.ReadLine();
-                sw.WriteLine(message);
-                string serverAnswer = sr.ReadLine();
+                while (true)
+                {
+                    string message = Console.ReadLine();
+                    sw.WriteLine(message);
+                    string serverAnswer = sr.ReadLine();
+                    Console.WriteLine(serverAnswer);
+                }
             }
         }
     }
