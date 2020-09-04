@@ -17,7 +17,7 @@ namespace EchoClient
     {
         public static void Start()
         {
-            TcpClient clientSocket = new TcpClient("localhost", 7777);
+            TcpClient clientSocket = new TcpClient("localhost", 7);
             using (clientSocket)
             {
                 Console.WriteLine("server found");
