@@ -42,8 +42,10 @@ namespace EchoServer
                 StreamWriter sw = new StreamWriter(ns);
                 sw.AutoFlush = true;
 
-                string message = sr.ReadLine();
-                Console.WriteLine("received message: " + message);
+                var message = sr.ReadLine();
+                var words = message.Split(" ");
+                int wordNumber = words.Length;
+                Console.WriteLine("received message: " + message + " has " + wordNumber + " words");
                 if (message != null)
                 {
                     sw.WriteLine(message.ToUpper());
