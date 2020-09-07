@@ -25,12 +25,21 @@ namespace EchoClient
                 StreamReader sr = new StreamReader(ns);
                 StreamWriter sw = new StreamWriter(ns);
                 sw.AutoFlush = true;
-                while (true)
+                bool exitLoop = true;
+
+                while (exitLoop)
                 {
                     string message = Console.ReadLine();
-                    sw.WriteLine(message);
-                    string serverAnswer = sr.ReadLine();
-                    Console.WriteLine(serverAnswer);
+                    if (message != string.Empty)
+                    {
+                        sw.WriteLine(message);
+                        string serverAnswer = sr.ReadLine();
+                        Console.WriteLine(serverAnswer);
+                    }
+                    else
+                    {
+                        exitLoop = false;
+                    }
                 }
             }
         }
