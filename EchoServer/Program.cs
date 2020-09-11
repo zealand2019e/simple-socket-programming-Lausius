@@ -21,13 +21,14 @@ namespace EchoServer
         public static void Start()
         {
             int clientsConnected = 0;
-            TcpListener serverSocket = new TcpListener(IPAddress.Loopback, 7777);
+            TcpListener serverSocket = new TcpListener(IPAddress.Loopback, 7);
             serverSocket.Start();
             while (true)
             {
                 TcpClient connectionSocket = serverSocket.AcceptTcpClient();
                 Console.WriteLine("Server activated");
                 clientsConnected++;
+                Console.WriteLine("Client " + clientsConnected + " has connected to the server.");
                 Task.Run(() => DoClient(connectionSocket));
             }
 
@@ -43,19 +44,21 @@ namespace EchoServer
         {
             using (socket)
             {
-
-                Stream ns = socket.GetStream();
-                StreamReader sr = new StreamReader(ns);
-                StreamWriter sw = new StreamWriter(ns);
-                sw.AutoFlush = true;
-
-                var message = sr.ReadLine();
-                var words = message.Split(" ");
-                int wordNumber = words.Length;
-                Console.WriteLine("received message: " + message + " has " + wordNumber + " words");
-                if (message != null)
+                while (true)
                 {
-                    sw.WriteLine(message.ToUpper());
+                    Stream ns = socket.GetStream();
+                    StreamReader sr = new StreamReader(ns);
+                    StreamWriter sw = new StreamWriter(ns);
+                    sw.AutoFlush = true;
+
+                    var message = sr.ReadLine();
+                    var words = message.Split(" ");
+                    int wordNumber = words.Length;
+                    Console.WriteLine("received message: " + message + " has " + wordNumber + " words");
+                    if (message != null)
+                    {
+                        sw.WriteLine(message.ToUpper());
+                    }
                 }
 
             }

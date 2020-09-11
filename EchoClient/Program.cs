@@ -17,6 +17,9 @@ namespace EchoClient
     {
         public static void Start()
         {
+            //Hammers IP
+            //TcpClient clientSocket = new TcpClient("192.168.24.174", 7777);
+            
             TcpClient clientSocket = new TcpClient("localhost", 7);
             using (clientSocket)
             {
