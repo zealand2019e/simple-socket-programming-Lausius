@@ -73,9 +73,7 @@ namespace EchoServer
                         break;
                     }
                 }
-
             }
         }
     }
-
 }
