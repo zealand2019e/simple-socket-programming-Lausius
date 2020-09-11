@@ -6,21 +6,22 @@ using System.Threading.Tasks;
 
 namespace EchoServer
 {
-    class Program
+    public class Program
     {
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
-            Server.Start();
+            Server server = new Server();
+            server.Start();
 
         }
     }
 
     public class Server
     {
-        public static void Start()
+        int clientsConnected = 0;
+        public void Start()
         {
-            int clientsConnected = 0;
             TcpListener serverSocket = new TcpListener(IPAddress.Loopback, 7);
             serverSocket.Start();
             while (true)
@@ -40,24 +41,36 @@ namespace EchoServer
             //Console.WriteLine("server stopped");
         }
 
-        public static void DoClient(TcpClient socket)
+        public void DoClient(TcpClient socket)
         {
             using (socket)
             {
                 while (true)
                 {
-                    Stream ns = socket.GetStream();
-                    StreamReader sr = new StreamReader(ns);
-                    StreamWriter sw = new StreamWriter(ns);
-                    sw.AutoFlush = true;
-
-                    var message = sr.ReadLine();
-                    var words = message.Split(" ");
-                    int wordNumber = words.Length;
-                    Console.WriteLine("received message: " + message + " has " + wordNumber + " words");
-                    if (message != null)
+                    try
                     {
-                        sw.WriteLine(message.ToUpper());
+                        Stream ns = socket.GetStream();
+                        StreamReader sr = new StreamReader(ns);
+                        StreamWriter sw = new StreamWriter(ns);
+                        sw.AutoFlush = true;
+                        var message = sr.ReadLine();
+                        var words = message.Split(" ");
+                        int wordNumber = words.Length;
+                        Console.WriteLine("received message: " + message + " has " + wordNumber + " words");
+                        //Console.WriteLine(message);
+                    }
+                    catch (Exception)
+                    {
+                        Console.WriteLine("Connection ended unexpectedly");
+                        socket.Close();
+                    }
+
+                    if (socket.Connected == false)
+                    {
+                        Console.WriteLine("Client: " + clientsConnected + " has left the server.");
+                        clientsConnected--;
+                        socket.Dispose();
+                        break;
                     }
                 }
 
