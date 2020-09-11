@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 
 namespace EchoServer
 {
@@ -19,11 +20,16 @@ namespace EchoServer
     {
         public static void Start()
         {
-            TcpListener serverSocket = new TcpListener(IPAddress.Loopback, 7);
+            int clientsConnected = 0;
+            TcpListener serverSocket = new TcpListener(IPAddress.Loopback, 7777);
             serverSocket.Start();
-            TcpClient connectionSocket = serverSocket.AcceptTcpClient();
-            Console.WriteLine("Server activated");
-            DoClient(connectionSocket);
+            while (true)
+            {
+                TcpClient connectionSocket = serverSocket.AcceptTcpClient();
+                Console.WriteLine("Server activated");
+                clientsConnected++;
+                Task.Run(() => DoClient(connectionSocket));
+            }
 
             //ns.Close();
             //Console.WriteLine("net stream closed");
@@ -37,6 +43,7 @@ namespace EchoServer
         {
             using (socket)
             {
+
                 Stream ns = socket.GetStream();
                 StreamReader sr = new StreamReader(ns);
                 StreamWriter sw = new StreamWriter(ns);
